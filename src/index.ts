@@ -21,16 +21,15 @@ const wrapWhereClauseInParenthesis = (clause: WhereClause): { beginClause: Where
 };
 
 /**
- * Merges two `WhereClause` objects into a single clause, joining them with a
- * logical operator.
+ * Merges two `WhereClause` objects into a single clause, joining them with
+ * a logical operator (defaults AND).
  *
- * @param {WhereClause} [where1] - First clause to merge. Optional.
- * @param {WhereClause} [where2] - Second clause to merge. Optional.
- * @param {LogicalOperator} [operator='AND'] - Operator used to join the clauses
- * (default is 'AND'). Optional.
+ * @param {WhereClause} [where1] - First clause to merge
+ * @param {WhereClause} [where2] - Second clause to merge
+ * @param {LogicalOperator} [operator='AND'] - Operator for joing clauses
  *
- * @returns {WhereClause|undefined} A new `WhereClause` that represents the merged
- * expression, or `undefined` if both clauses are not provided.
+ * @returns {WhereClause|undefined} A new `WhereClause` that represents the
+ * merged expression, or `undefined` if neither clauses were provided.
  */
 export const mergeWhereClauses = (
   where1?: WhereClause,
