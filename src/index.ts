@@ -1,20 +1,20 @@
-import { WhereClause, LogicalOperator } from 'soql-parser-js';
+import type { WhereClause, LogicalOperator } from "soql-parser-js";
 
 const wrapWhereClauseInParenthesis = (clause: WhereClause): { beginClause: WhereClause, endClause: WhereClause } => {
   const clone = JSON.parse(JSON.stringify(clause)) as WhereClause;
-  clone.left.openParen = (clone.left.openParen ?? 0) + 1
+  clone.left.openParen = (clone.left.openParen ?? 0) + 1;
   let current = clone;
   while (current.right) {
     current = current.right;
   }
-  current.left.closeParen = (current.left.closeParen ?? 0) + 1
+  current.left.closeParen = (current.left.closeParen ?? 0) + 1;
   return { beginClause: clone, endClause: current };
 };
 
 export const mergeWhereClauses = (
   where1?: WhereClause,
   where2?: WhereClause,
-  operator: LogicalOperator = 'AND',
+  operator: LogicalOperator = "AND",
 ): WhereClause | undefined => {
   if (!where1 || !where2) return where1 ?? where2;
 

@@ -1,6 +1,6 @@
 import { composeQuery, formatQuery, LogicalOperator, parseQuery } from "soql-parser-js";
-import { mergeWhereClauses } from ".";
 import { format } from "sql-formatter";
+import { mergeWhereClauses } from ".";
 
 const main = () => {
   const queryString1 = `
@@ -17,7 +17,7 @@ const main = () => {
   const CLAUSE_RIGHT = queryTwo.where;
   const CLAUSE_LEFT = queryOne.where;
 
-  const LOGICAL_OPERATOR: LogicalOperator = 'OR';
+  const LOGICAL_OPERATOR: LogicalOperator = "OR";
   const mergedClause = mergeWhereClauses(CLAUSE_LEFT, CLAUSE_RIGHT, LOGICAL_OPERATOR);
   console.log(JSON.stringify(mergedClause, null, 2));
 
@@ -39,8 +39,8 @@ const main = () => {
     console.error(e.message);
   }
 
-  console.log(format(queryAfterMerge, { logicalOperatorNewline: 'before', linesBetweenQueries: 3 }));
-}
+  console.log(format(queryAfterMerge, { logicalOperatorNewline: "before", linesBetweenQueries: 3 }));
+};
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   void main();

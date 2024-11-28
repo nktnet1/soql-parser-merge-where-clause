@@ -2,6 +2,7 @@
 	"main": "src/main.ts",
 	"scripts": {
 		"start": "tsx src/main.ts",
+		"lint": "eslint",
 		"test": "vitest --run"
 	},
 	"license": "MIT",
@@ -11,7 +12,11 @@
 	},
 	"devDependencies": {
 		"@types/node": "^22.10.0",
+		"eslint": "^9.15.0",
+		"eslint-plugin-import": "^2.31.0",
+		"globals": "^15.12.0",
 		"tsx": "^4.19.2",
+		"typescript-eslint": "^8.16.0",
 		"vitest": "^2.1.6"
 	},
 	"packageManager": "pnpm@9.13.2"
