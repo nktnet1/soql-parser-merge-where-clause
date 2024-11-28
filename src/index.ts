@@ -49,15 +49,15 @@ const main = () => {
   console.log(JSON.stringify(mergedClause, null, 2));
 
   queryOne.where = mergedClause;
-  const afterCompose = composeQuery(queryOne);
+  const queryAfterMerge = composeQuery(queryOne);
   console.log({
     queryString1,
     LOGICAL_OPERATOR,
     queryString2,
-    afterCompose,
+    queryAfterMerge,
   });
   try {
-    formatQuery(afterCompose, {
+    formatQuery(queryAfterMerge, {
       numIndent: 2,
       whereClauseOperatorsIndented: true,
       fieldSubqueryParensOnOwnLine: true
@@ -66,7 +66,7 @@ const main = () => {
     console.error(e.message);
   }
 
-  console.log(format(afterCompose, { logicalOperatorNewline: 'before', linesBetweenQueries: 3 }));
+  console.log(format(queryAfterMerge, { logicalOperatorNewline: 'before', linesBetweenQueries: 3 }));
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

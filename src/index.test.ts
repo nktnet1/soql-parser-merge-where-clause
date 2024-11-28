@@ -1,6 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import { mergeWhereClauses } from './index';
 import { composeQuery, formatQuery, LogicalOperator, parseQuery } from 'soql-parser-js';
+import { format } from 'sql-formatter';
 
 function testMergeWhereClauses({ queryString1, queryString2, operator, expectedQueryString }: {
   queryString1: string;
@@ -15,12 +16,17 @@ function testMergeWhereClauses({ queryString1, queryString2, operator, expectedQ
   const copyQuery = structuredClone(query1);
   const mergedWhere = mergeWhereClauses(query1.where, query2.where, operator);
   copyQuery.where = mergedWhere;
-  const afterCompose = composeQuery(copyQuery);
-  expect(() => formatQuery(afterCompose)).not.toThrow();
-  expect(mergedWhere).toMatchObject(expectedResult!);
+  const queryAfterMerge = composeQuery(copyQuery);
+
+  // These functions will throw if the result cannot be parsed
+  expect(() => formatQuery(queryAfterMerge)).not.toThrow();
+  expect(() => format(queryAfterMerge)).not.toThrow();
+
+  // Equality match for the generated structure
+  expect(mergedWhere).toStrictEqual(expectedResult!);
 }
 
-describe('Base Cases', () => {
+describe('Base case merge', () => {
   test('No WHERE clause in either query', () => {
     testMergeWhereClauses({
       queryString1: "SELECT Id FROM Object",
@@ -29,30 +35,48 @@ describe('Base Cases', () => {
       expectedQueryString: "SELECT Id FROM Object",
     });
   });
+
+  test('empty WHERE clauses in first query', () => {
+    testMergeWhereClauses({
+      queryString1: "SELECT Id FROM Object",
+      queryString2: "SELECT Id FROM Object WHERE field1 = 'value1'",
+      operator: 'AND',
+      expectedQueryString: "SELECT Id FROM Object WHERE field1 = 'value1'",
+    });
+  });
+
+  test('empty WHERE clauses in second query', () => {
+    testMergeWhereClauses({
+      queryString1: "SELECT Id FROM Object WHERE field1 = 'value1'",
+      queryString2: "SELECT Id FROM Object",
+      operator: 'AND',
+      expectedQueryString: "SELECT Id FROM Object WHERE field1 = 'value1'",
+    });
+  });
 });
 
-describe('Simple Cases', () => {
-  test('Merges two simple WHERE clauses with AND', () => {
+describe('Basic merge', () => {
+  test('two simple WHERE clauses with AND', () => {
     testMergeWhereClauses({
       queryString1: "SELECT Id FROM Object WHERE field1 = 'value1'",
       queryString2: "SELECT Id FROM Object WHERE field2 = 'value2'",
       operator: 'AND',
-      expectedQueryString: "SELECT Id FROM Object WHERE field1 = 'value1' AND field2 = 'value2'",
+      expectedQueryString: "SELECT Id FROM Object WHERE (field1 = 'value1') AND (field2 = 'value2')",
     });
   });
 
-  test('Merges two simple WHERE clauses with OR', () => {
+  test('two simple WHERE clauses with OR', () => {
     testMergeWhereClauses({
       queryString1: "SELECT Id FROM Object WHERE field1 = 'value1'",
       queryString2: "SELECT Id FROM Object WHERE field2 = 'value2'",
       operator: 'OR',
-      expectedQueryString: "SELECT Id FROM Object WHERE field1 = 'value1' OR field2 = 'value2'",
+      expectedQueryString: "SELECT Id FROM Object WHERE (field1 = 'value1') OR (field2 = 'value2')",
     });
   });
 });
 
-describe('Advanced Cases', () => {
-  test('Handles nested WHERE clauses with AND', () => {
+describe('Advance merge', () => {
+  test('nested WHERE clauses with AND', () => {
     testMergeWhereClauses({
       queryString1: "SELECT Id FROM Object WHERE field1 = 'value1' AND field3 = 'value3'",
       queryString2: "SELECT Id FROM Object WHERE field2 = 'value2' OR field4 = 'value4'",
@@ -61,28 +85,12 @@ describe('Advanced Cases', () => {
     });
   });
 
-  test('Handles nested WHERE clauses with OR', () => {
+  test('nested WHERE clauses with OR', () => {
     testMergeWhereClauses({
       queryString1: "SELECT Id FROM Object WHERE field1 = 'value1' AND field3 = 'value3'",
       queryString2: "SELECT Id FROM Object WHERE field2 = 'value2' OR field4 = 'value4'",
       operator: 'OR',
       expectedQueryString: "SELECT Id FROM Object WHERE (field1 = 'value1' AND field3 = 'value3') OR (field2 = 'value2' OR field4 = 'value4')",
-    });
-  });
-
-  test('Handles empty WHERE clauses in one query', () => {
-    testMergeWhereClauses({
-      queryString1: "SELECT Id FROM Object",
-      queryString2: "SELECT Id FROM Object WHERE field1 = 'value1'",
-      operator: 'AND',
-      expectedQueryString: "SELECT Id FROM Object WHERE field1 = 'value1'",
-    });
-
-    testMergeWhereClauses({
-      queryString1: "SELECT Id FROM Object WHERE field1 = 'value1'",
-      queryString2: "SELECT Id FROM Object",
-      operator: 'AND',
-      expectedQueryString: "SELECT Id FROM Object WHERE field1 = 'value1'",
     });
   });
 });
