@@ -13,11 +13,11 @@ const wrapWhereClauseInParenthesis = (clause: WhereClause): { beginClause: Where
   return { beginClause: clone, endClause: current };
 };
 
-export function mergeWhereClauses(
+export const mergeWhereClauses = (
   where1?: WhereClause,
   where2?: WhereClause,
   operator: LogicalOperator = 'AND',
-): WhereClause | undefined {
+): WhereClause | undefined => {
   if (!where1 || !where2) return where1 || where2;
 
   const { beginClause: wrappedWhere1, endClause: endClause1 } = wrapWhereClauseInParenthesis(where1);
@@ -27,7 +27,7 @@ export function mergeWhereClauses(
   endClause1.right = wrappedWhere2;
 
   return wrappedWhere1;
-}
+};
 
 const main = () => {
   const queryString1 = `
