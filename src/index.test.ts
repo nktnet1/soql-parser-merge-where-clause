@@ -73,7 +73,7 @@ describe("Basic merge with AND/OR conditions", () => {
       queryString1: "SELECT Id FROM Object WHERE field1 = 'value1'",
       queryString2: "SELECT Id FROM Object WHERE field2 = 'value2'",
       expectedQueryString: `
-        SELECT Id FROM Object WHERE 
+        SELECT Id FROM Object WHERE
         (field1 = 'value1') AND (field2 = 'value2')
       `
     },
@@ -82,7 +82,7 @@ describe("Basic merge with AND/OR conditions", () => {
       queryString1: "SELECT Id FROM Object WHERE field1 = 'value1'",
       queryString2: "SELECT Id FROM Object WHERE field2 = 'value2'",
       expectedQueryString: `
-        SELECT Id FROM Object WHERE 
+        SELECT Id FROM Object WHERE
         (field1 = 'value1') OR (field2 = 'value2')
       `
     },
@@ -103,7 +103,7 @@ describe("Nested AND/OR", () => {
       queryString1: "SELECT Id FROM Object WHERE field1 = 'value1' AND field3 = 'value3'",
       queryString2: "SELECT Id FROM Object WHERE field2 = 'value2' OR field4 = 'value4'",
       expectedQueryString: `
-        SELECT Id FROM Object WHERE 
+        SELECT Id FROM Object WHERE
         (field1 = 'value1' AND field3 = 'value3') AND (field2 = 'value2' OR field4 = 'value4')
       `
     },
@@ -112,7 +112,7 @@ describe("Nested AND/OR", () => {
       queryString1: "SELECT Id FROM Object WHERE field1 = 'value1' AND field3 = 'value3'",
       queryString2: "SELECT Id FROM Object WHERE field2 = 'value2' OR field4 = 'value4'",
       expectedQueryString: `
-        SELECT Id FROM Object WHERE 
+        SELECT Id FROM Object WHERE
         (field1 = 'value1' AND field3 = 'value3') OR (field2 = 'value2' OR field4 = 'value4')
       `
     },
@@ -128,22 +128,22 @@ describe("Nested AND/OR", () => {
   test("extremely high nesting in WHERE clauses with AND", () => {
     testMergeWhereClauses({
       queryString1: `
-        SELECT Id FROM Object WHERE 
-        ((field1 = 'value1' AND (field2 = 'value2' OR (field3 = 'value3' AND field4 = 'value4'))) 
+        SELECT Id FROM Object WHERE
+        ((field1 = 'value1' AND (field2 = 'value2' OR (field3 = 'value3' AND field4 = 'value4')))
          OR ((field5 = 'value5' AND field6 = 'value6') AND (field7 = 'value7' OR field8 = 'value8')))
       `,
       queryString2: `
         SELECT Id FROM Object WHERE
-        (((field9 = 'value9' AND (field10 = 'value10' OR field11 = 'value11')) OR field12 = 'value12') 
+        (((field9 = 'value9' AND (field10 = 'value10' OR field11 = 'value11')) OR field12 = 'value12')
          AND ((field13 = 'value13' OR field14 = 'value14') AND (field15 = 'value15' AND field16 = 'value16')))
       `,
       operator: "AND" as LogicalOperator,
       expectedQueryString: `
-        SELECT Id FROM Object WHERE 
-        (((field1 = 'value1' AND (field2 = 'value2' OR (field3 = 'value3' AND field4 = 'value4'))) 
-          OR ((field5 = 'value5' AND field6 = 'value6') AND (field7 = 'value7' OR field8 = 'value8')))) 
-        AND 
-        ((((field9 = 'value9' AND (field10 = 'value10' OR field11 = 'value11')) OR field12 = 'value12') 
+        SELECT Id FROM Object WHERE
+        (((field1 = 'value1' AND (field2 = 'value2' OR (field3 = 'value3' AND field4 = 'value4')))
+          OR ((field5 = 'value5' AND field6 = 'value6') AND (field7 = 'value7' OR field8 = 'value8'))))
+        AND
+        ((((field9 = 'value9' AND (field10 = 'value10' OR field11 = 'value11')) OR field12 = 'value12')
           AND ((field13 = 'value13' OR field14 = 'value14') AND (field15 = 'value15' AND field16 = 'value16'))))
       `,
     });
@@ -155,42 +155,42 @@ describe("Subqueries", () => {
     {
       operator: "AND" as LogicalOperator,
       queryString1: `
-        SELECT Id FROM Object WHERE 
-        field1 IN (SELECT Id FROM RelatedObject WHERE field2 = 'value1') 
+        SELECT Id FROM Object WHERE
+        field1 IN (SELECT Id FROM RelatedObject WHERE field2 = 'value1')
         AND field3 = 'value3'
       `,
       queryString2: `
-        SELECT Id FROM Object WHERE 
-        field4 = 'value4' 
+        SELECT Id FROM Object WHERE
+        field4 = 'value4'
         AND field5 IN (SELECT Id FROM AnotherRelatedObject WHERE field6 = 'value5')
       `,
       expectedQueryString: `
-        SELECT Id FROM Object WHERE 
-        (field1 IN (SELECT Id FROM RelatedObject WHERE field2 = 'value1') 
-         AND field3 = 'value3') 
-        AND 
-        (field4 = 'value4' 
+        SELECT Id FROM Object WHERE
+        (field1 IN (SELECT Id FROM RelatedObject WHERE field2 = 'value1')
+         AND field3 = 'value3')
+        AND
+        (field4 = 'value4'
          AND field5 IN (SELECT Id FROM AnotherRelatedObject WHERE field6 = 'value5'))
       `
     },
     {
       operator: "OR" as LogicalOperator,
       queryString1: `
-        SELECT Id FROM Object WHERE 
-        field1 IN (SELECT Id FROM RelatedObject WHERE field2 = 'value1') 
+        SELECT Id FROM Object WHERE
+        field1 IN (SELECT Id FROM RelatedObject WHERE field2 = 'value1')
         OR field3 = 'value3'
       `,
       queryString2: `
-        SELECT Id FROM Object WHERE 
-        field4 = 'value4' 
+        SELECT Id FROM Object WHERE
+        field4 = 'value4'
         OR field5 IN (SELECT Id FROM AnotherRelatedObject WHERE field6 = 'value5')
       `,
       expectedQueryString: `
-        SELECT Id FROM Object WHERE 
-        (field1 IN (SELECT Id FROM RelatedObject WHERE field2 = 'value1') 
-         OR field3 = 'value3') 
-        OR 
-        (field4 = 'value4' 
+        SELECT Id FROM Object WHERE
+        (field1 IN (SELECT Id FROM RelatedObject WHERE field2 = 'value1')
+         OR field3 = 'value3')
+        OR
+        (field4 = 'value4'
          OR field5 IN (SELECT Id FROM AnotherRelatedObject WHERE field6 = 'value5'))
       `
     },
@@ -209,18 +209,18 @@ describe("Contains NOT", () => {
   test("should merge WHERE clauses with mixed AND, OR, NOT operators", () => {
     testMergeWhereClauses({
       queryString1: `
-        SELECT Id FROM Object WHERE 
+        SELECT Id FROM Object WHERE
         field1 = 'value1' AND field2 = 'value2' OR NOT field3 = 'value3'
       `,
       queryString2: `
-        SELECT Id FROM Object WHERE 
+        SELECT Id FROM Object WHERE
         field4 = 'value4' AND NOT field5 = 'value5'
       `,
       operator: "AND" as LogicalOperator,
       expectedQueryString: `
-        SELECT Id FROM Object WHERE 
-        (field1 = 'value1' AND field2 = 'value2' OR NOT field3 = 'value3') 
-        AND 
+        SELECT Id FROM Object WHERE
+        (field1 = 'value1' AND field2 = 'value2' OR NOT field3 = 'value3')
+        AND
         (field4 = 'value4' AND NOT field5 = 'value5')
       `
     });
@@ -229,18 +229,18 @@ describe("Contains NOT", () => {
   test("should handle AND and NOT operators correctly when combined", () => {
     testMergeWhereClauses({
       queryString1: `
-        SELECT Id FROM Object WHERE 
+        SELECT Id FROM Object WHERE
         field1 = 'value1' AND NOT field2 = 'value2'
       `,
       queryString2: `
-        SELECT Id FROM Object WHERE 
+        SELECT Id FROM Object WHERE
         field3 = 'value3' AND NOT field4 = 'value4'
       `,
       operator: "AND" as LogicalOperator,
       expectedQueryString: `
-        SELECT Id FROM Object WHERE 
-        (field1 = 'value1' AND NOT field2 = 'value2') 
-        AND 
+        SELECT Id FROM Object WHERE
+        (field1 = 'value1' AND NOT field2 = 'value2')
+        AND
         (field3 = 'value3' AND NOT field4 = 'value4')
       `
     });
@@ -249,18 +249,18 @@ describe("Contains NOT", () => {
   test("should handle OR and NOT operators correctly when combined", () => {
     testMergeWhereClauses({
       queryString1: `
-        SELECT Id FROM Object WHERE 
+        SELECT Id FROM Object WHERE
         field1 = 'value1' OR NOT field2 = 'value2'
       `,
       queryString2: `
-        SELECT Id FROM Object WHERE 
+        SELECT Id FROM Object WHERE
         field3 = 'value3' OR NOT field4 = 'value4'
       `,
       operator: "OR" as LogicalOperator,
       expectedQueryString: `
-        SELECT Id FROM Object WHERE 
-        (field1 = 'value1' OR NOT field2 = 'value2') 
-        OR 
+        SELECT Id FROM Object WHERE
+        (field1 = 'value1' OR NOT field2 = 'value2')
+        OR
         (field3 = 'value3' OR NOT field4 = 'value4')
       `
     });

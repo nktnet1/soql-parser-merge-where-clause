@@ -1,4 +1,4 @@
-import { composeQuery, formatQuery, LogicalOperator, parseQuery } from "soql-parser-js";
+import { composeQuery, formatQuery, type LogicalOperator, parseQuery } from "soql-parser-js";
 import { format } from "sql-formatter";
 import { mergeWhereClauses } from ".";
 
@@ -35,8 +35,8 @@ const main = () => {
       whereClauseOperatorsIndented: true,
       fieldSubqueryParensOnOwnLine: true
     });
-  } catch (e) {
-    console.error(e.message);
+  } catch (e: unknown) {
+    console.error(e);
   }
 
   console.log(format(queryAfterMerge, { logicalOperatorNewline: "before", linesBetweenQueries: 3 }));

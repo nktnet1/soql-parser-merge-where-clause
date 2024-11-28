@@ -26,7 +26,7 @@ const wrapWhereClauseInParenthesis = (clause: WhereClause): { beginClause: Where
  *
  * @param {WhereClause} [where1] - First clause to merge. Optional.
  * @param {WhereClause} [where2] - Second clause to merge. Optional.
- * @param {LogicalOperator} [operator='AND'] - Operator used to join the clauses 
+ * @param {LogicalOperator} [operator='AND'] - Operator used to join the clauses
  * (default is 'AND'). Optional.
  *
  * @returns {WhereClause|undefined} A new `WhereClause` that represents the merged

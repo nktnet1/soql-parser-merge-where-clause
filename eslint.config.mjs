@@ -4,7 +4,8 @@ import importPlugin from "eslint-plugin-import";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-export default [
+/** @type { import("eslint").Linter.Config[] } */
+const eslintConfig = [
   {files: ["**/*.{js,mjs,cjs,ts}"],
     plugins: {
       import: importPlugin,
@@ -26,6 +27,7 @@ export default [
         caughtErrorsIgnorePattern: "^_"
       }],
       indent: ["error", 2],
+      "no-trailing-spaces": "error",
       "import/no-unresolved": "off",
       "import/named": "off",
       semi: ["error", "always"],
@@ -60,3 +62,5 @@ export default [
     }
   }
 ];
+
+export default eslintConfig;
