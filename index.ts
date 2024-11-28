@@ -19,10 +19,10 @@ function mergeWhereClauses(
 
 const main = () => {
   const queryString1 = `
-    SELECT Id FROM Event__C WHERE slug = 'my_slug'
+    SELECT Id FROM Event__C WHERE slug = 'my_slug' OR slug = 'my_other_slug'
   `.trim();
   const queryString2 = `
-    SELECT Id FROM Event__C WHERE name = 'my_name'
+    SELECT Id FROM Event__C WHERE name = 'my_name' OR name != 'my_other_name'
   `.trim();
 
   const queryOne = parseQuery(queryString1);
