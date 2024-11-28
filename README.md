@@ -2,14 +2,22 @@
 
 - For merging two WHERE clauses in `"soql-parser-js": "^1.2.1"`, used in SFDMU
 
-## Run main function
+## Setup
 
-```sh
-npx --yes tsx src/index.ts
+```
+pnpm i
 ```
 
-## Run tests
+## Usage
+
+Run main function
 
 ```sh
-npx --yes vitest
+npx tsx src/index.ts
+```
+
+Run tests
+
+```sh
+npx vitest
 ```
