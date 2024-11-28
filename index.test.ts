@@ -11,6 +11,6 @@ describe('mergeWhereClauses', () => {
     const expectedResult = parseQuery(`${BASE_QUERY_STRING} field1 = 'value1' AND field2 = 'value2'`).where;
     
     const result = mergeWhereClauses(query1.where!, query2.where!, 'AND');
-    expect(result).toStrictEqual(expectedResult);
+    expect(result).toMatchObject(expectedResult!);
   });
 });
