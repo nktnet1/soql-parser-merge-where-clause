@@ -1,0 +1,49 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      soql-parser-js:
+        specifier: ^1.2.1
+        version: 1.2.1
+
+packages:
+
+  '@types/lodash@4.17.13':
+    resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
+
+  antlr4ts@0.4.1-alpha.0:
+    resolution: {integrity: sha512-7lmDJPxygDwDyq9Bn7Kb71nFCgSHLcihwRNllhm51Yf3tim7A8xfbx2qE6oru9vWooE8uHGZxcXAjH7+tO2aUQ==}
+
+  lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+
+  minimist@1.2.8:
+    resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+
+  soql-parser-js@1.2.1:
+    resolution: {integrity: sha512-jYio/rX1Guk+saSRKaRjBLtQrsi7XxZpDquwpfOhEXqAMp0dQN/zTIsyjG0n1m6z0YrxR0OLkmjXQzFPqsakFQ==}
+    deprecated: This package has been moved to the @jetstreamapp organization starting on version 6.0.0. Update your dependency to use @jetstreamapp/soql-parser-js.
+    hasBin: true
+
+snapshots:
+
+  '@types/lodash@4.17.13': {}
+
+  antlr4ts@0.4.1-alpha.0: {}
+
+  lodash@4.17.21: {}
+
+  minimist@1.2.8: {}
+
+  soql-parser-js@1.2.1:
+    dependencies:
+      '@types/lodash': 4.17.13
+      antlr4ts: 0.4.1-alpha.0
+      lodash: 4.17.21
+      minimist: 1.2.8
