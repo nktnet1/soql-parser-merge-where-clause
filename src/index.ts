@@ -7,7 +7,7 @@ const wrapWhereClauseInParenthesis = (clause: WhereClause): { beginClause: Where
   while (current.right) {
     current = current.right;
   }
-  current.left.closeParen = (current.left.closeParen || 0) + 1
+  current.left.closeParen = (current.left.closeParen ?? 0) + 1
   return { beginClause: clone, endClause: current };
 };
 
@@ -16,7 +16,7 @@ export const mergeWhereClauses = (
   where2?: WhereClause,
   operator: LogicalOperator = 'AND',
 ): WhereClause | undefined => {
-  if (!where1 || !where2) return where1 || where2;
+  if (!where1 || !where2) return where1 ?? where2;
 
   const { beginClause: wrappedWhere1, endClause: endClause1 } = wrapWhereClauseInParenthesis(where1);
   const { beginClause: wrappedWhere2 } = wrapWhereClauseInParenthesis(where2);
