@@ -19,5 +19,5 @@ npx tsx src/index.ts
 Run tests
 
 ```sh
-npx vitest
+npx vitest --run
 ```
