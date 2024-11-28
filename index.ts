@@ -2,7 +2,7 @@ import { WhereClause, LogicalOperator, composeQuery, formatQuery } from 'soql-pa
 import { parseQuery } from 'soql-parser-js';
 import { format } from 'sql-formatter';
 
-const wrapWhereClause = (clause: WhereClause): WhereClause => {
+const wrapWhereClauseInParenthesis = (clause: WhereClause): WhereClause => {
   const clone = JSON.parse(JSON.stringify(clause)) as WhereClause;
   clone.left.openParen = (clone.left.openParen ?? 0) + 1
   let current = clone;
@@ -22,8 +22,8 @@ export function mergeWhereClauses(
   if (!where1) return where2;
   if (!where2) return where1;
 
-  const wrappedWhere1 = wrapWhereClause(where1);
-  const wrappedWhere2 = wrapWhereClause(where2);
+  const wrappedWhere1 = wrapWhereClauseInParenthesis(where1);
+  const wrappedWhere2 = wrapWhereClauseInParenthesis(where2);
 
   let current = wrappedWhere1;
   while (current.right) {
