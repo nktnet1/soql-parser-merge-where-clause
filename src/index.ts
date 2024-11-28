@@ -31,17 +31,11 @@ export const mergeWhereClauses = (
 
 const main = () => {
   const queryString1 = `
-    SELECT Id FROM Event__C 
-    WHERE (slug__c != null AND Unit_Cap__c > 0 AND Status__c = 'Active') 
-    OR (Unit_Cap__c = 0 AND Is_Published__c = true) 
-    OR (Unit_Cap__c = 0 AND Is_Published__c = true AND tam = 'hi') 
+    SELECT Id FROM Object WHERE field1 = 'value1' AND field3 = 'value3'
   `.trim();
 
   const queryString2 = `
-    SELECT Id FROM Event__C 
-    WHERE (Name LIKE '%test%' OR Description__c = 'special') 
-    AND (Pricing__c > 100 OR Pricing__c < 10) 
-    AND (Unit_Cap__c = 0 OR Is_Published__c = true OR tam = 'hi') 
+    SELECT Id FROM Object WHERE field2 = 'value2' OR field4 = 'value4'
   `.trim();
 
   const queryOne = parseQuery(queryString1);
