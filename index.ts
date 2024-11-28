@@ -2,7 +2,7 @@ import { WhereClause, LogicalOperator, composeQuery, formatQuery } from 'soql-pa
 import { parseQuery } from 'soql-parser-js';
 import { format } from 'sql-formatter';
 
-const wrapWhereClauseInParenthesis = (clause: WhereClause): WhereClause => {
+const wrapWhereClauseInParenthesis = (clause: WhereClause): { beginClause: WhereClause, endClause: WhereClause } => {
   const clone = JSON.parse(JSON.stringify(clause)) as WhereClause;
   clone.left.openParen = (clone.left.openParen ?? 0) + 1
   let current = clone;
@@ -10,28 +10,21 @@ const wrapWhereClauseInParenthesis = (clause: WhereClause): WhereClause => {
     current = current.right;
   }
   current.left.closeParen = (current.left.closeParen || 0) + 1
-  return clone;
+  return { beginClause: clone, endClause: current };
 };
 
 export function mergeWhereClauses(
   where1?: WhereClause,
   where2?: WhereClause,
   operator: LogicalOperator = 'AND',
-): WhereClause {
-  if (!(where1 && where2)) return { left: { operator: '=' } };
-  if (!where1) return where2;
-  if (!where2) return where1;
+): WhereClause | undefined {
+  if (!where1 || !where2) return where1 || where2;
 
-  const wrappedWhere1 = wrapWhereClauseInParenthesis(where1);
-  const wrappedWhere2 = wrapWhereClauseInParenthesis(where2);
+  const { beginClause: wrappedWhere1, endClause: endClause1 } = wrapWhereClauseInParenthesis(where1);
+  const { beginClause: wrappedWhere2 } = wrapWhereClauseInParenthesis(where2);
 
-  let current = wrappedWhere1;
-  while (current.right) {
-    current = current.right;
-  }
-
-  current.operator = operator;
-  current.right = wrappedWhere2;
+  endClause1.operator = operator;
+  endClause1.right = wrappedWhere2;
 
   return wrappedWhere1;
 }
@@ -41,12 +34,14 @@ const main = () => {
     SELECT Id FROM Event__C 
     WHERE (slug__c != null AND Unit_Cap__c > 0 AND Status__c = 'Active') 
     OR (Unit_Cap__c = 0 AND Is_Published__c = true) 
+    OR (Unit_Cap__c = 0 AND Is_Published__c = true AND tam = 'hi') 
   `.trim();
 
   const queryString2 = `
     SELECT Id FROM Event__C 
     WHERE (Name LIKE '%test%' OR Description__c = 'special') 
     AND (Pricing__c > 100 OR Pricing__c < 10) 
+    AND (Unit_Cap__c = 0 OR Is_Published__c = true OR tam = 'hi') 
   `.trim();
 
   const queryOne = parseQuery(queryString1);
